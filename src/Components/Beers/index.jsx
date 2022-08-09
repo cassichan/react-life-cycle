@@ -1,23 +1,27 @@
 import { useEffect, useState } from "react";
+import BeerCard from "./BeerCard";
 
 export default function Beers() {
   const [beerList, setBeerList] = useState();
+  const [beerType, setBeerType] = useState("ale");
   useEffect(() => {
-    fetch(`https://api.sampleapis.com/beers/ale`) //ale, stouts, red-ale
+    fetch(`https://api.sampleapis.com/beers/${beerType}`) //ale, stouts
       .then((response) => response.json())
       .then((beers) => setBeerList(beers))
       .catch(alert);
-  }, []);
+  }, [beerType]); //Added beer type to dependency list
   if (!beerList) {
     return <h2>Loading...</h2>;
   }
   return (
     <>
-      <ul>
+      <button onClick={() => setBeerType("ale")}>Ale</button>
+      <button onClick={() => setBeerType("stouts")}>Stouts</button>
+      <section id="beerList">
         {beerList.map((beer) => (
-          <li key={beer.id}>{beer.name}</li>
+          <BeerCard key={beer.id} beer={beer} />
         ))}
-      </ul>
+      </section>
     </>
   );
 }
